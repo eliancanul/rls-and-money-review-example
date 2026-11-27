@@ -2,7 +2,7 @@
 
 A small, self-contained example of reviewing an AI-written database change in a Next.js + Supabase app: one access rule that leaks data and one fee calculation that loses a cent, each proven by a failing test and then fixed.
 
-**Start with the report: [REVIEW.md](REVIEW.md)** (two-minute read, no jargon).
+**Start with the report: [as a page](https://eliancanul.github.io/rls-and-money-review-example/)** or as [REVIEW.md](REVIEW.md). Two-minute read, no jargon.
 
 The history is the example:
 
