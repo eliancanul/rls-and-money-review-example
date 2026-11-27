@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review: two problems found, both fixed</title>
+<meta name="description" content="A small example of reviewing an AI-written Supabase change: one access rule and one fee calculation.">
+<style>
+  :root {
+    --ink: #17191c; --soft: #5b6168; --line: #e3e1dc; --paper: #faf9f6; --card: #ffffff;
+    --bad: #b3261e; --bad-bg: #fcefed; --good: #1a6b3c; --good-bg: #eaf5ee; --accent: #1f3a5f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 24px 72px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 0 0 14px; }
+  h1 { font: 600 40px/1.12 Georgia, "Times New Roman", serif; letter-spacing: -.01em; margin: 0 0 16px; }
+  .lede { font-size: 19px; color: #33383e; margin: 0 0 12px; }
+  .note { font-size: 15px; color: var(--soft); margin: 0; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 36px 0 8px; padding: 0; list-style: none; }
+  .steps a { display: block; height: 100%; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+  .steps a:hover { border-color: var(--accent); }
+  .steps b { display: block; font-size: 15px; }
+  .steps span { font-size: 14px; color: var(--soft); }
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; margin-bottom: 8px; }
+  .pill.pass { background: var(--good-bg); color: var(--good); }
+  .pill.fail { background: var(--bad-bg); color: var(--bad); }
+  section { margin-top: 52px; }
+  h2 { font: 600 27px/1.2 Georgia, "Times New Roman", serif; margin: 0 0 6px; }
+  .num { font: 600 13px/1 -apple-system, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--bad); display: block; margin-bottom: 10px; }
+  dl { margin: 18px 0 0; }
+  dt { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); margin-top: 18px; }
+  dd { margin: 4px 0 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 16px; }
+  th, td { text-align: left; padding: 10px 16px; border-top: 1px solid var(--line); }
+  tr:first-child th { border-top: 0; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); font-weight: 600; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .sum { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .sum div { padding: 16px 18px; border-radius: 10px; }
+  .sum .was { background: var(--bad-bg); }
+  .sum .now { background: var(--good-bg); }
+  .sum small { display: block; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .sum .was small { color: var(--bad); } .sum .now small { color: var(--good); }
+  .sum strong { font: 600 30px/1.3 Georgia, serif; font-variant-numeric: tabular-nums; }
+  .calc { font-size: 15px; color: var(--soft); margin: 10px 0 0; }
+  .rule { margin: 8px 0 0; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--card); font-style: italic; }
+  ul { padding-left: 20px; margin: 12px 0 0; }
+  li { margin-top: 8px; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 15px; color: var(--soft); }
+  a { color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 31px; } .steps, .sum { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Pull request review &middot; Elian Canul</p>
+  <h1>Two problems found.<br>Both fixed. Both now tested.</h1>
+  <p class="lede">A change added a table of cases and a calculation for how much a client owes at payoff. Its own tests passed. It still leaked data and lost a cent.</p>
+  <p class="note">This is a made-up example, not your system. I wrote a small change the way an AI assistant typically would, with two mistakes AI assistants commonly make, then reviewed it the way I would review a real pull request for you. I learned Supabase to build it.</p>
+
+  <ol class="steps">
+    <li><a href="https://github.com/eliancanul/rls-and-money-review-example/pull/1"><span class="pill pass">Tests pass</span><b>1. The AI-written change</b><span>Looks finished. Isn't.</span></a></li>
+    <li><a href="https://github.com/eliancanul/rls-and-money-review-example/pull/2"><span class="pill fail">Tests fail</span><b>2. The review</b><span>Thirteen new tests. Eight fail.</span></a></li>
+    <li><a href="https://github.com/eliancanul/rls-and-money-review-example/pull/3"><span class="pill pass">Tests pass</span><b>3. The fix</b><span>Same tests, now green.</span></a></li>
+  </ol>
+
+  <section>
+    <span class="num">Problem 1 &middot; Who can see what</span>
+    <h2>Every employee could see every case</h2>
+    <dl>
+      <dt>What was wrong</dt>
+      <dd>The access rule only asked &ldquo;is this person logged in?&rdquo;. It never asked who they were.</dd>
+      <dt>What would have happened</dt>
+      <dd>Any salesperson could open any other salesperson&rsquo;s cases. So could anyone with a login and no role at all.</dd>
+      <dt>What I changed</dt>
+      <dd>One rule per role, and nothing by default.
+        <table>
+          <tr><th>Role</th><th>Can read</th></tr>
+          <tr><td>Admin</td><td>Every case</td></tr>
+          <tr><td>Sales</td><td>Only the cases assigned to them</td></tr>
+          <tr><td>Underwriting</td><td>Only cases still awaiting a decision</td></tr>
+          <tr><td>Servicing</td><td>Only funded and paid-off cases</td></tr>
+          <tr><td>Logged in, no role</td><td>Nothing</td></tr>
+          <tr><td>Not logged in</td><td>Nothing</td></tr>
+        </table>
+      </dd>
+      <dt>How you know it works</dt>
+      <dd>One test for each row of that table. Five of them failed before the fix; all pass now.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <span class="num">Problem 2 &middot; Money math</span>
+    <h2>The payoff could be off by one cent</h2>
+    <dl>
+      <dt>What was wrong</dt>
+      <dd>The calculation used the kind of decimal number computers store only approximately. When a fee landed on exactly half a cent, it sometimes rounded up and sometimes down.</dd>
+      <dt>What would have happened</dt>
+      <dd>
+        <div class="sum">
+          <div class="was"><small>The code said</small><strong>$2,725.54</strong></div>
+          <div class="now"><small>It should be</small><strong>$2,725.55</strong></div>
+        </div>
+        <p class="calc">$2,500.50 advance at 3% a month for 3 months. The fee is $225.045. One cent is small, but a payoff letter that disagrees with the contract is not.</p>
+      </dd>
+      <dt>What I changed</dt>
+      <dd>The calculation now works only in whole cents, with one written rule:
+        <p class="rule">The fee is rounded once, at the end, to the nearest cent, and exactly half a cent rounds up.</p>
+      </dd>
+      <dt>How you know it works</dt>
+      <dd>Five payoff tests with the arithmetic written out next to each. Three failed before the fix; all pass now.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>What I assumed</h2>
+    <ul>
+      <li><b>I don&rsquo;t know your fee model, so I used a simple example:</b> a flat monthly fee on the original advance. If yours compounds, or has minimums or caps, the tests change but the method doesn&rsquo;t.</li>
+      <li><b>I don&rsquo;t know your roles.</b> I used admin, sales, underwriting and servicing, with the simplest sensible rule for each.</li>
+      <li><b>Rounding direction is your decision, not mine.</b> Half-up is a placeholder; it should match what your contracts say. Changing it is a one-line edit.</li>
+      <li><b>Only reading is covered.</b> Nobody can create or edit a case through the app in this example, so those rules were out of scope.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Everything here is synthetic: the people, the cases, the roles and the fee formula. The code and the test runs are in the
+    <a href="https://github.com/eliancanul/rls-and-money-review-example">repository</a>.
+  </footer>
+</main>
+</body>
+</html>
