@@ -1,0 +1,19 @@
+name: database-tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.4.0
+      - name: Start a local database and apply every migration
+        run: supabase db start
+      - name: Run the database tests
+        run: supabase test db
